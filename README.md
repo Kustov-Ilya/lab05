@@ -15,12 +15,14 @@ $ open https://git-scm.com
 
 ## Tutorial
 
+Установка значений переменных окружения GITHUB_USERNAME и GITHUB_EMAIL
 ```ShellSession
 $ export GITHUB_USERNAME=Kustov-Ilya
 $ export GITHUB_EMAIL=kustoff.il@yandex.ru
 $ alias edit=vim
 ```
 
+Создание рабочего пространства
 ```ShellSession
 $ mkdir lab03 && cd lab03  #создание директории и переход в нее
 $ git init  #создание локального репозитория
@@ -45,16 +47,22 @@ $ git push origin master  #отправление файлов
 *.swp
 ```
 
+Получение изменений
 ```ShellSession
 $ git pull origin master
 $ git log  #история коммитов
 ```
 
+Создание директории 
 ```ShellSession
 $ mkdir sources  #создание директории для файлов исходного кода
 $ mkdir include  #создание директории для заголовочных файлов
 $ mkdir examples  #создание директории для примеров
 $ cat > sources/print.cpp <<EOF  #создание и редактирование файлов
+```
+
+Заполненение файлов
+```ShellSession
 #include <print.hpp>
 
 void print(const std::string& text, std::ostream& out) {
@@ -67,6 +75,7 @@ void print(const std::string& text, std::ofstream& out) {
 EOF
 ```
 
+Заполнение заголовочных файлов
 ```ShellSession
 $ cat > include/print.hpp <<EOF
 #include <string>
@@ -78,6 +87,7 @@ void print(const std::string& text, std::ofstream& out);
 EOF
 ```
 
+Первый пример
 ```ShellSession
 $ cat > examples/example1.cpp <<EOF
 #include <print.hpp>
@@ -88,6 +98,7 @@ int main(int argc, char** argv) {
 EOF
 ```
 
+Второй пример
 ```ShellSession
 $ cat > examples/example2.cpp <<EOF
 #include <fstream>
@@ -100,10 +111,11 @@ int main(int argc, char** argv) {
 EOF
 ```
 
+Редактирование README.md
 ```ShellSession
 $ edit README.md
 ```
-
+Добавление изменений
 ```ShellSession
 $ git status
 $ git add .
