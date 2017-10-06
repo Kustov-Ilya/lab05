@@ -1,125 +1,136 @@
-## Laboratory work III
+## Laboratory work IV
 
-Данная лабораторная работа посвещена изучению систем контроля версий на примере **Git**.
+Данная лабораторная работа посвещена изучению систем автоматизации сборки проекта на примере **CMake**
 
-```bash
-$ open https://git-scm.com
+```ShellSession
+$ open https://cmake.org/
 ```
 
 ## Tasks
 
-- [X] 1. Создать публичный репозиторий с названием **lab03** и с лиценцией **MIT**
-- [X] 2. Ознакомиться со ссылками учебного материала
-- [X] 3. Выполнить инструкцию учебного материала
-- [X] 4. Составить отчет и отправить ссылку личным сообщением в **Slack**
+- [x] 1. Создать публичный репозиторий с названием **lab04** на сервисе **GitHub**
+- [x] 2. Ознакомиться со ссылками учебного материала
+- [x] 3. Выполнить инструкцию учебного материала
+- [x] 4. Составить отчет и отправить ссылку личным сообщением в **Slack**
 
 ## Tutorial
-
-Установка значений переменных окружения GITHUB_USERNAME и GITHUB_EMAIL
+  Добавление переменной окружения        
 ```ShellSession
-$ export GITHUB_USERNAME=Kustov-Ilya
-$ export GITHUB_EMAIL=kustoff.il@yandex.ru
-$ alias edit=vim
+$ export GITHUB_USERNAME=<имя_пользователя>
 ```
-
-Создание рабочего пространства
+  Клонирование репозитория прошлой лабораторной работы в директорию lab04
 ```ShellSession
-$ mkdir lab03 && cd lab03  #создание директории и переход в нее
-$ git init  #создание локального репозитория
-$ git config --global user.name ${GITHUB_USERNAME}  #настройка данных
-$ git config --global user.email ${GITHUB_EMAIL}
-$ git config -e --global
-$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab03  #добавление удаленного репозитория
-$ git pull origin master  #слияние данных из удаленной ветки
-$ touch README.md  #создание файла
-$ git status  #определение состояния файлов
-$ git add README.md  #переводит файл в готовое состояние для коммита
-$ git commit -m"added README.md"  #коммит
-$ git push origin master  #отправление файлов
+$ git clone https://github.com/${GITHUB_USERNAME}/lab03.git lab04
+$ cd lab04
+$ git remote remove origin
+$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab04.git
 ```
-
-Добавить на сервисе **GitHub** в репозитории **lab03** файл **.gitignore**
-со следующем содержимом:
-
+Компиляция файлов и создание статической библиотеки
 ```ShellSession
-*build*/
-*install*/
-*.swp
+$ g++ -I./include -std=c++11 -c sources/print.cpp   #компиляция  
+$ ls print.o                                        #проверка наличия объектного файла
+$ ar rvs print.a print.o                            #архививация объектного файла, создание статической библиотеки
+$ file print.a                                      #получение информации о файле
+$ g++ -I./include -std=c++11 -c examples/example1.cpp   #компиляция 
+$ ls example1.o                                         
+$ g++ example1.o print.a -o example1                    # сборка с print.a
+$ ./example1 && echo                                   
 ```
-
-Получение изменений
+Компиляция файлов и создание статической библиотеки
 ```ShellSession
-$ git pull origin master
-$ git log  #история коммитов
+$ g++ -I./include -std=c++11 -c examples/example2.cpp   
+$ ls example2.o
+$ g++ example2.o print.a -o example2
+$ ./example2
+$ cat log.txt && echo  #проверка работы
 ```
-
-Создание директории 
+Удаление объектных файлов
 ```ShellSession
-$ mkdir sources  #создание директории для файлов исходного кода
-$ mkdir include  #создание директории для заголовочных файлов
-$ mkdir examples  #создание директории для примеров
-$ cat > sources/print.cpp <<EOF  #создание и редактирование файлов
+$ rm -rf example1.o example2.o print.o 
+$ rm -rf print.a 
+$ rm -rf example1 example2
+$ rm -rf log.txt
 ```
-
-Заполненение файлов
+Редактирование  CMakeLists
 ```ShellSession
-#include <print.hpp>
-
-void print(const std::string& text, std::ostream& out) {
-  out << text;
-}
-
-void print(const std::string& text, std::ofstream& out) {
-  out << text;
-}
+$ cat > CMakeLists.txt <<EOF
+cmake_minimum_required(VERSION 3.0)
+project(print)
 EOF
 ```
-
-Заполнение заголовочных файлов
+Редактирование  CMakeLists
 ```ShellSession
-$ cat > include/print.hpp <<EOF
-#include <string>
-#include <fstream>
-#include <iostream>
-
-void print(const std::string& text, std::ostream& out = std::cout);
-void print(const std::string& text, std::ofstream& out);
+$ cat >> CMakeLists.txt <<EOF
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 EOF
 ```
-
-Первый пример
+Редактирование  CMakeLists
 ```ShellSession
-$ cat > examples/example1.cpp <<EOF
-#include <print.hpp>
-
-int main(int argc, char** argv) {
-  print("hello");
-}
+$ cat >> CMakeLists.txt <<EOF
+add_library(print STATIC \${CMAKE_CURRENT_SOURCE_DIR}/sources/print.cpp)
 EOF
 ```
-
-Второй пример
+Редактирование  CMakeLists
 ```ShellSession
-$ cat > examples/example2.cpp <<EOF
-#include <fstream>
-#include <print.hpp>
-
-int main(int argc, char** argv) {
-  std::ofstream file("log.txt");
-  print(std::string("hello"), file);
-}
+$ cat >> CMakeLists.txt <<EOF
+include_directories(\${CMAKE_CURRENT_SOURCE_DIR}/include)
 EOF
 ```
-
-Редактирование README.md
+Запуск сборки cmake
 ```ShellSession
-$ edit README.md
+$ cmake -H. -B_build
+$ cmake --build _build
 ```
-Добавление изменений
+Редактирование CMakeLists
 ```ShellSession
-$ git status
-$ git add .
-$ git commit -m"added sources"
+$ cat >> CMakeLists.txt <<EOF
+
+add_executable(example1 \${CMAKE_CURRENT_SOURCE_DIR}/examples/example1.cpp)
+add_executable(example2 \${CMAKE_CURRENT_SOURCE_DIR}/examples/example2.cpp)
+EOF
+```
+Редактирование  CMakeLists
+```ShellSession
+$ cat >> CMakeLists.txt <<EOF
+
+target_link_libraries(example1 print)
+target_link_libraries(example2 print)
+EOF
+```
+Запуск сборки проектов
+```ShellSession
+$ cmake --build _build
+$ cmake --build _build --target print
+$ cmake --build _build --target example1
+$ cmake --build _build --target example2
+```
+Проверка работы примеров
+```ShellSession
+$ ls -la _build/libprint.a
+$ _build/example1 && echo
+hello
+$ _build/example2
+$ cat log.txt && echo
+hello
+```
+Клонирование репозитория и перемещение файла CMakeLists в директорию 
+```ShellSession
+$ git clone https://github.com/tp-labs/lab04 tmp
+$ mv -f tmp/CMakeLists.txt .
+$ rm -rf tmp
+```
+Просмотр файла CMakeLists, сборка проекта с ключами, отображение дерева проекта
+```ShellSession
+$ cat CMakeLists.txt
+$ cmake -H. -B_build -DCMAKE_INSTALL_PREFIX=_install
+$ cmake --build _build --target install
+$ tree _install
+```
+Коммит 
+```ShellSession
+$ git add CMakeLists.txt
+$ git commit -m"added CMakeLists.txt"
 $ git push origin master
 ```
 
@@ -127,7 +138,7 @@ $ git push origin master
 
 ```ShellSession
 $ cd ~/workspace/labs/
-$ export LAB_NUMBER=03
+$ export LAB_NUMBER=04
 $ git clone https://github.com/tp-labs/lab${LAB_NUMBER} tasks/lab${LAB_NUMBER}
 $ mkdir reports/lab${LAB_NUMBER}
 $ cp tasks/lab${LAB_NUMBER}/README.md reports/lab${LAB_NUMBER}/REPORT.md
@@ -138,10 +149,8 @@ $ gistup -m "lab${LAB_NUMBER}"
 
 ## Links
 
-- [GitHub](https://github.com)
-- [Bitbucket](https://bitbucket.org)
-- [Gitlab](https://about.gitlab.com)
-- [LearnGitBranching](http://learngitbranching.js.org/)
+- [Autotools](http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html)
+- [CMake](https://cgold.readthedocs.io/en/latest/index.html)
 
 ```
 Copyright (c) 2017 Братья Вершинины
