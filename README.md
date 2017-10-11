@@ -83,15 +83,54 @@ $ git push origin master
 ```
 Использование комманды тревиса 
 ```ShellSession
-$ travis lint
-$ travis accounts    #показывает соединенные GitHub аккаунты
-$ travis sync       #синхронизация
-$ travis repos        #отображение репозиториев
-$ travis enable         # добавить travis в текущей директории
-$ travis whatsup          #показывает пройденные шаги
-$ travis branches           #показывает  шаги в master 
-$ travis history           #показывает  историю изменений  
-$ travis show           #показывает  информацию
+$ travis lint  #check for warnings in travis.yml
+Warnings for .travis.yml:
+[x] value for addons section is empty, dropping
+[x] in addons section: unexpected key apt, dropping
+
+$ travis accounts  #показывает соединенные GitHub аккаунты
+Kustov-Ilya (Kustov-Ilya): subscribed, 5 repositories
+
+$ travis sync  #синхронизация
+synchronizing: .. done
+
+$ travis repos  #отображение репозиториев
+Kustov-Ilya/2-Semester (active: no, admin: yes, push: yes, pull: yes)
+Description: ???
+Kustov-Ilya/3-Semester (active: no, admin: yes, push: yes, pull: yes)
+Description: ???
+Kustov-Ilya/lab03 (active: no, admin: yes, push: yes, pull: yes)
+Description: ???
+Kustov-Ilya/lab04 (active: no, admin: yes, push: yes, pull: yes)
+Description: ???
+Kustov-Ilya/lab05 (active: yes, admin: yes, push: yes, pull: yes)
+Description: ???
+
+$ travis enable  # добавить travis в текущей директории
+Detected repository as Kustov-Ilya/lab05, is this correct? |yes| 
+Kustov-Ilya/lab05: enabled :)
+
+$ travis whatsup  #показывает пройденные шаги
+Kustov-Ilya/lab05 started: #1
+
+$ travis branches  #показывает  шаги в master 
+master:  #1    passed     added CI
+
+$ travis history  #показывает  историю изменений 
+#1 passed:       master added CI
+
+$ travis show #показывает  информацию
+Job #1.1:  added CI
+State:         passed
+Type:          push
+Branch:        master
+Compare URL:   https://github.com/Kustov-Ilya/lab05/compare/89aa3e2d8fa0^...515a03d5f8dc
+Duration:      1 min 10 sec
+Started:       2017-10-11 18:12:58
+Finished:      2017-10-11 18:14:08
+Allow Failure: false
+Config:        os: linux
+
 ```
 
 ## Report
